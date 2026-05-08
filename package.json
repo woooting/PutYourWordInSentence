@@ -1,0 +1,5 @@
+{
+  "name": "sentence-builder",
+  "private": true,
+  "workspaces": ["shared", "backend", "frontend"]
+}

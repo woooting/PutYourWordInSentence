@@ -1,0 +1,19 @@
+// This is a placeholder Prisma schema for future use.
+// Not required for MVP (in-memory session only).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Reserved for future: cache generated sentences
+// model GeneratedSentence {
+//   id        String   @id @default(uuid())
+//   word      String
+//   sentence  String
+//   createdAt DateTime @default(now())
+// }
