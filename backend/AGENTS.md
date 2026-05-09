@@ -1,7 +1,7 @@
 # Backend AGENTS.md
 
 ## 技术栈
-Hono.js · Bun · TypeScript · Zod · Prisma · LangChain
+Hono.js · Node.js · TypeScript · Zod · Prisma · LangChain
 
 ## 三层架构铁律
 - 路由层：只定义路径 + 绑定 controller

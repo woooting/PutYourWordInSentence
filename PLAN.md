@@ -1,8 +1,9 @@
 # PLAN: 英文遣词造句 - 网页端应用
 
 ## 当前状态
-- 项目初始化阶段，空目录
-- 需求已明确，待开始实现
+- Phase 1 & 2 已完成
+- AI 提示词 & LangChain 集成已就绪
+- 后端 API 可接收请求并调用 DeepSeek 生成句子
 
 ---
 
@@ -15,7 +16,7 @@
 | 词库区单词数 | 每组**10个**（5个正确 + 5个干扰项） |
 | 组间导航 | **翻页式**（上/下一组按钮） |
 | 数据持久化 | **仅内存/会话**，刷新丢失，MVP不接DB |
-| 运行时 | Bun + npm(包管理) |
+| 运行时 | Node.js (tsx) + npm(包管理) |
 
 ### 核心交互流程
 ```
@@ -149,28 +150,28 @@ Put the word in sentence/
 ### Phase 1 - 项目脚手架搭建
 **目标**：前后端项目可启动，基础联通
 
-- [ ] 1.1 初始化后端项目
+- [x] 1.1 初始化后端项目
   - 创建 `backend/`，`npm init`，安装依赖：`hono`, `@hono/node-server`, `zod`, `prisma`, `@prisma/client`
   - 配置 `tsconfig.json` (target: ESNext, module: ESNext, strict)
   - 创建 Hono 入口 `src/index.ts`，CORS 中间件，监听 3001 端口
   - 创建健康检查路由 `GET /api/health`
   - 配置 `.env` 读取
-- [ ] 1.2 初始化前端项目
+- [x] 1.2 初始化前端项目
   - `npm create vite@latest frontend -- --template react-ts`
   - 安装依赖：`tailwindcss`, `@tailwindcss/vite`, `@dnd-kit/core`, `@dnd-kit/utilities`
   - 安装 `shadcn/ui` 并初始化（根据 shadcn 最新文档）
   - 添加 shadcn 组件：`button`, `card`, `input`, `badge`
   - 配置 Tailwind + postcss
   - 创建基础 `App.tsx`，验证能调用后端 `/api/health`
-- [ ] 1.3 配置 vite proxy
+- [x] 1.3 配置 vite proxy
   - `vite.config.ts` 中配置 proxy：`/api` → `http://localhost:3001`
-- [ ] 1.4 验证
+- [x] 1.4 验证
   - 启动前后端，前端页面能成功请求后端 health 接口并显示返回结果
 
 ### Phase 2 - AI 提示词 & LangChain 集成
 **目标**：设计并验证提示词，AI 能稳定返回可用句子
 
-- [ ] 2.1 设计系统提示词（`backend/src/lib/ai/prompts.ts`）
+- [x] 2.1 设计系统提示词（`backend/src/lib/ai/prompts.ts`）
   ```
   你需要扮演一个有10年经验的英语外教。
   目标用户是中国英语学习者（B1-B2水平）。
@@ -187,18 +188,18 @@ Put the word in sentence/
   {"word": "原单词", "sentence": "包含该单词的完整句子"}
   只返回JSON，不要任何额外文字。
   ```
-- [ ] 2.2 安装 LangChain 依赖
+- [x] 2.2 安装 LangChain 依赖
   - `@langchain/core`, `@langchain/openai`（DeepSeek 兼容 OpenAI 格式）
-- [ ] 2.3 实现 `aiService.ts`
+- [x] 2.3 实现 `aiService.ts`
   - 使用 `ChatOpenAI` 指向 DeepSeek API endpoint (`https://api.deepseek.com`)
   - 使用 `ChatPromptTemplate` + `StringOutputParser`
   - 将响应 JSON.parse，用 Zod 校验结构
   - 校验后处理：正则确认每个句子确实包含对应单词（不区分大小写）
   - 失败单词自动重试（最多2次）
-- [ ] 2.4 实现句子挖空加工
+- [x] 2.4 实现句子挖空加工
   - 在 `generateService.ts` 中，将每句中的目标单词（首次出现）替换为 `________`
   - 记录挖空位置索引，返回给前端
-- [ ] 2.5 验证
+- [x] 2.5 验证
   - 用 Postman/curl 测试 `POST /api/generate`，传入20个单词，检查返回结构和质量
 
 ### Phase 3 - 后端 API 完成

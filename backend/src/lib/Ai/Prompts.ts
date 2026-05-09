@@ -10,7 +10,7 @@ Rules:
 6. Vary the scenarios - avoid making all sentences about the same topic.
 
 You MUST respond with ONLY a valid JSON array. Each element must have this exact structure:
-{"word": "the original word", "sentence": "the complete sentence containing that word"}
+{{"word": "the original word", "sentence": "the complete sentence containing that word"}}
 
 Do NOT include any additional text, explanation, or markdown formatting.`
 

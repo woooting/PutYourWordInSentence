@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { serve } from '@hono/node-server'
 import { generateRoute } from './routes/GenerateRoute'
 import { errorHandler } from './middlewares/ErrorHandler'
 
@@ -23,7 +24,4 @@ app.get('/api/health', (c) => {
 
 app.route('/api', generateRoute)
 
-export default {
-  port: 3001,
-  fetch: app.fetch,
-}
+serve({ fetch: app.fetch, port: 3001 })
