@@ -1,9 +1,9 @@
 # PLAN: 英文遣词造句 - 网页端应用
 
 ## 当前状态
-- Phase 1 & 2 已完成
-- AI 提示词 & LangChain 集成已就绪
-- 后端 API 可接收请求并调用 DeepSeek 生成句子
+- Phase 1 & 2 & 3 已完成
+- 后端 API 完整：Zod 校验（纯英文字母+去重）→ AI 生成 → 挖空加工 → 返回成功+失败列表
+- AI 超时 30s，部分单词失败不抛异常，以列表形式返回
 
 ---
 
@@ -205,7 +205,7 @@ Put the word in sentence/
 ### Phase 3 - 后端 API 完成
 **目标**：完整的 POST /api/generate 接口
 
-- [ ] 3.1 创建 Zod schema（`backend/src/schemas/generate.ts`）
+- [x] 3.1 创建 Zod schema（`backend/src/schemas/generate.ts`）
   ```ts
   // 请求
   { words: string[] }  // min:20, max:100, 每个word: 1-30字符, 纯英文字母
@@ -220,18 +220,18 @@ Put the word in sentence/
     }[];
   }
   ```
-- [ ] 3.2 实现 Controller（参数校验 + 去重处理）
+- [x] 3.2 实现 Controller（参数校验 + 去重处理）
   - 校验 words 数量 >= 20
   - 对 words 去重（trim + toLowerCase），如果去重后 < 20 则报错
-- [ ] 3.3 实现 Service（编排调用）
+- [x] 3.3 实现 Service（编排调用）
   - 调用 `aiService.generateSentences(words)`
   - 对返回结果做句子加工（挖空 + 首字母大写规范化）
   - 返回完整响应
-- [ ] 3.4 添加错误处理
+- [x] 3.4 添加错误处理
   - AI调用超时（30s）
   - JSON解析失败 → 返回 502
   - 部分单词生成失败 → 返回成功部分 + 失败列表
-- [ ] 3.5 验证
+- [x] 3.5 验证
   - 测试20个单词正常请求
   - 测试19个单词拒绝请求
   - 测试含中文/特殊字符的拒绝

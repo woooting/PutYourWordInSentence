@@ -1,5 +1,4 @@
-import type { GenerateResponse } from '../types'
-import { BusinessError } from '../errors/BusinessError'
+import type { GenerateResponse, BlankResult } from '../types'
 import { generateSentencesWithAI } from './AIService'
 
 /**
@@ -20,7 +19,7 @@ function capitalizeFirstLetter(str: string): string {
 /**
  * 将句子中的目标单词首次出现替换为 ________，并返回替换后的句子及单词索引。
  */
-function createBlank(sentence: string, word: string): { blankSentence: string; blankIndex: number } {
+function createBlank(sentence: string, word: string): Pick<BlankResult, 'blankSentence' | 'blankIndex'> {
   const regex = new RegExp(`\\b${escapeRegex(word)}\\b`, 'i')
   const tokens = sentence.split(/\s+/)
 
@@ -46,18 +45,12 @@ function createBlank(sentence: string, word: string): { blankSentence: string; b
 }
 
 /**
- * 生成练习数据：去重校验 → AI 生成句子 → 挖空加工 → 返回统一响应。
+ * 生成练习数据：AI 生成句子 → 挖空加工 → 返回统一响应（含成功和失败列表）。
  */
 export async function generateService(words: string[], apiKey: string): Promise<GenerateResponse> {
-  const uniqueWords = [...new Set(words.map((w) => w.trim().toLowerCase()).filter((w) => w.length > 0))]
+  const { success, failed } = await generateSentencesWithAI(words, apiKey)
 
-  if (uniqueWords.length < 20) {
-    throw new BusinessError('至少需要20个不重复的单词')
-  }
-
-  const aiSentences = await generateSentencesWithAI(uniqueWords, apiKey)
-
-  const sentences = aiSentences.map(({ word, sentence }) => {
+  const sentences = success.map(({ word, sentence }) => {
     const { blankSentence, blankIndex } = createBlank(sentence, word)
     return {
       word,
@@ -67,5 +60,5 @@ export async function generateService(words: string[], apiKey: string): Promise<
     }
   })
 
-  return { sentences }
+  return { sentences, failed }
 }

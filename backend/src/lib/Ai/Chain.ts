@@ -14,6 +14,7 @@ export function createSentenceChain(apiKey: string) {
       baseURL: 'https://api.deepseek.com',
     },
     temperature: 0.7,
+    timeout: 30000,
   })
 
   const prompt = ChatPromptTemplate.fromMessages([

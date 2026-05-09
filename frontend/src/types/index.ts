@@ -1,20 +1,23 @@
-export type { GenerateRequest, GenerateResponse } from '@project/shared'
+import type { SentenceItem } from '@project/shared'
 
+export type { GenerateRequest, GenerateResponse } from '@project/shared'
 export type { SentenceItem as Sentence } from '@project/shared'
 
 export type ExercisePhase = 'input' | 'loading' | 'exercising' | 'completed'
 
 export interface Group {
-  sentences: import('@project/shared').SentenceItem[]
+  sentences: SentenceItem[]
   correctWords: string[]
   distractorWords: string[]
 }
 
-export interface GroupResult {
-  [sentenceIndex: number]: {
-    placedWord: string | null
-    isCorrect: boolean
-  }
+export interface BlankState {
+  placedWord: string | null
+  isCorrect: boolean
+}
+
+export interface GroupState {
+  [blankIndex: number]: BlankState
 }
 
 export type DragItemType = 'word-bank' | 'sentence-blank'

@@ -84,12 +84,12 @@ async function callAI(words: string[], apiKey: string): Promise<AIGeneratedSente
 }
 
 /**
- * 为一批单词生成句子，失败单词自动重试（最多2次）。
+ * 为一批单词生成句子，失败单词自动重试（最多2次）。返回成功和失败的单词列表。
  */
 export async function generateSentencesWithAI(
   words: string[],
   apiKey: string
-): Promise<AIGeneratedSentence[]> {
+): Promise<{ success: AIGeneratedSentence[]; failed: { word: string; reason: string }[] }> {
   if (!apiKey || apiKey === 'your_deepseek_api_key_here') {
     throw new SystemError('DeepSeek API Key 未配置')
   }
@@ -118,9 +118,8 @@ export async function generateSentencesWithAI(
     }
   }
 
-  if (pending.length > 0) {
-    throw new SystemError(`部分单词生成失败: ${pending.join(', ')}`)
+  return {
+    success: results,
+    failed: pending.map((word) => ({ word, reason: 'AI 生成句子失败或句子不包含目标单词' })),
   }
-
-  return results
 }
