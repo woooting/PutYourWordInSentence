@@ -4,6 +4,9 @@ import { generateRequestSchema } from '../schemas/Generate'
 import { generateService } from '../services/GenerateService'
 import { BusinessError } from '../errors/BusinessError'
 
+/**
+ * POST /api/generate 处理器：校验入参 → 调用生成服务 → 返回统一响应。
+ */
 export async function generateController(c: Context) {
   const body = await c.req.json()
   const parsed = generateRequestSchema.safeParse(body)

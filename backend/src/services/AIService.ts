@@ -6,6 +6,10 @@ const MAX_RETRIES = 2
 const BATCH_SIZE = 20
 const INVOKE_THRESHOLD = 30
 
+/**
+ * 从 AI 原始回复中提取 JSON 字符串。
+ * 兼容 AI 返回 markdown 代码块、裸数组、或夹杂额外文字的情况。
+ */
 function extractJson(raw: string): string {
   const codeBlock = raw.match(/```(?:json)?\s*([\s\S]*?)```/)
   if (codeBlock) return codeBlock[1].trim()
@@ -14,16 +18,25 @@ function extractJson(raw: string): string {
   return raw.trim()
 }
 
+/**
+ * 转义字符串中的正则特殊字符，使其作为普通字面参与正则匹配。
+ */
 function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
+/**
+ * 检查句子中是否包含目标单词（整词匹配，大小写不敏感）。
+ */
 function sentenceContainsWord(sentence: string, word: string): boolean {
   const regex = new RegExp(`\\b${escapeRegex(word)}\\b`, 'i')
   return regex.test(sentence)
 }
 
-function parseAIResponse(raw: string): { word: string; sentence: string }[] {
+/**
+ * 解析 AI 返回的原始字符串为句子数组，校验 JSON 结构合法性。
+ */
+function parseAIResponse(raw: string): AIGeneratedSentence[] {
   const jsonStr = extractJson(raw)
   let parsed: unknown
   try {
@@ -34,9 +47,12 @@ function parseAIResponse(raw: string): { word: string; sentence: string }[] {
   if (!Array.isArray(parsed)) {
     throw new SystemError('AI 返回格式异常，未返回数组')
   }
-  return parsed as { word: string; sentence: string }[]
+  return parsed as AIGeneratedSentence[]
 }
 
+/**
+ * 将数组按指定大小切分为若干子数组。
+ */
 function chunkArray<T>(arr: T[], size: number): T[][] {
   const chunks: T[][] = []
   for (let i = 0; i < arr.length; i += size) {
@@ -45,7 +61,10 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
   return chunks
 }
 
-async function callAI(words: string[], apiKey: string): Promise<{ word: string; sentence: string }[]> {
+/**
+ * 调用 AI 为给定单词生成句子。单词数 ≤30 时单次 invoke，>30 时按每批20词并行 batch。
+ */
+async function callAI(words: string[], apiKey: string): Promise<AIGeneratedSentence[]> {
   const chain = createSentenceChain(apiKey)
 
   if (words.length <= INVOKE_THRESHOLD) {
@@ -57,13 +76,16 @@ async function callAI(words: string[], apiKey: string): Promise<{ word: string; 
   const inputs = chunks.map((chunk) => ({ words: chunk.join(', ') }))
   const rawResults = await chain.batch(inputs)
 
-  const allResults: { word: string; sentence: string }[] = []
+  const allResults: AIGeneratedSentence[] = []
   for (const raw of rawResults) {
     allResults.push(...parseAIResponse(raw))
   }
   return allResults
 }
 
+/**
+ * 为一批单词生成句子，失败单词自动重试（最多2次）。
+ */
 export async function generateSentencesWithAI(
   words: string[],
   apiKey: string

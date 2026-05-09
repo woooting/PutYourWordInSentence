@@ -57,6 +57,10 @@ src/
 4. ./
    组间空一行
 
+## 注释规范
+- 所有函数必须添加 JSDoc 注释，简要描述函数作用
+- 函数入参和返回值类型由 TypeScript 类型标注，JSDoc 无需重复 `@param` / `@returns`
+
 ## 禁止清单
 - 禁止路由层调 API/DB
 - 禁止 controller 含业务逻辑
@@ -66,3 +70,4 @@ src/
 - 禁止 any 类型
 - 禁止文件名非 PascalCase
 - 禁止 import 未使用的依赖
+- 禁止重复书写原始类型字面量，复用类型必须提取到 types/ 目录统一维护
