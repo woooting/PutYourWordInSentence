@@ -18,11 +18,11 @@ export function SentenceList({ groupIdx }: SentenceListProps) {
   const groupState = groupStates[groupIdx] || {}
 
   const handleRegenerate = (_globalIndex: number) => {
-    // TODO: 单句重新生成逻辑，Phase 5+ 实现
+    // TODO: single sentence regeneration, Phase 5+
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3.5">
       {groupSentences.map((sentence, i) => {
         const globalIndex = start + i
         const blankState = groupState[globalIndex] || {

@@ -15,7 +15,7 @@ export function GroupPagination({ groupIdx }: GroupPaginationProps) {
 
   const handleNext = useCallback(() => {
     if (!isComplete) {
-      const confirmed = window.confirm('当前组还有未完成的句子，确定要跳转到下一组吗？')
+      const confirmed = window.confirm('Current group has unfinished sentences. Skip to next group?')
       if (!confirmed) return
     }
     nextGroup()
@@ -26,24 +26,33 @@ export function GroupPagination({ groupIdx }: GroupPaginationProps) {
   }, [prevGroup])
 
   return (
-    <div className="flex items-center justify-between mt-4">
+    <div className="flex items-center justify-between mt-7">
       <Button
-        variant="outline"
+        variant="ghost"
         onClick={handlePrev}
         disabled={groupIdx === 0}
+        className="h-9 px-4 rounded-xl text-text-secondary hover:text-text hover:bg-surface-alt transition-all duration-200 text-sm font-medium disabled:opacity-30"
       >
-        上一组
+        Previous
       </Button>
 
-      <span className="text-sm text-gray-500">
-        第 {groupIdx + 1} / {totalGroups} 组
+      <span className="text-sm text-text-muted tabular-nums select-none">
+        {groupIdx + 1} / {totalGroups}
       </span>
 
       {isLastGroup ? (
-        <Button onClick={nextGroup}>完成</Button>
+        <Button
+          onClick={nextGroup}
+          className="h-9 px-5 rounded-xl bg-primary hover:bg-primary-hover text-surface shadow-none transition-all duration-200 hover:shadow-md text-sm font-medium"
+        >
+          Finish
+        </Button>
       ) : (
-        <Button onClick={handleNext}>
-          下一组
+        <Button
+          onClick={handleNext}
+          className="h-9 px-5 rounded-xl bg-primary hover:bg-primary-hover text-surface shadow-none transition-all duration-200 hover:shadow-md text-sm font-medium"
+        >
+          Next
         </Button>
       )}
     </div>

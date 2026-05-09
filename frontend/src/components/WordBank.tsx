@@ -28,9 +28,11 @@ export function WordBank({ groupIdx }: WordBankProps) {
   }, [correctWords, distractorWords])
 
   return (
-    <div className="w-full p-4 bg-gray-50 rounded-lg">
-      <p className="text-sm text-gray-500 mb-3">词库 — 拖拽单词到下方句子的空位中</p>
-      <div className="flex flex-wrap gap-2 justify-center">
+    <div className="w-full p-5 bg-surface rounded-2xl border border-border-light">
+      <p className="text-xs text-text-muted mb-3.5 tracking-wide uppercase">
+        Word Bank
+      </p>
+      <div className="flex flex-wrap gap-2.5 justify-center">
         {shuffled.map((word) => (
           <DraggableWordCard
             key={word}
@@ -71,11 +73,12 @@ function DraggableWordCard({
       {...listeners}
       {...attributes}
       className={cn(
-        'px-4 py-2 rounded-full text-sm font-medium select-none transition-all',
-        isUsed
-          ? 'bg-gray-200 text-gray-400 cursor-not-allowed line-through'
-          : 'bg-white border-2 border-blue-400 text-blue-700 cursor-grab hover:bg-blue-50 hover:scale-105 active:cursor-grabbing shadow-sm',
-        isDragging && !isUsed && 'opacity-50 shadow-lg'
+        'px-4 py-2 rounded-full text-sm font-medium select-none transition-all duration-200',
+        isUsed &&
+          'bg-surface-alt text-text-muted cursor-not-allowed opacity-50',
+        !isUsed &&
+          'bg-surface border border-border text-text cursor-grab hover:border-primary hover:text-primary hover:shadow-sm hover:-translate-y-0.5 active:cursor-grabbing active:scale-95',
+        isDragging && !isUsed && 'opacity-60 shadow-lg scale-105'
       )}
       style={style}
     >

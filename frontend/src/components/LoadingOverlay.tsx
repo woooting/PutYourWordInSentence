@@ -1,4 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
+import { cn } from '@/lib/utils'
+
+const delayClasses = ['[animation-delay:0ms]', '[animation-delay:300ms]', '[animation-delay:600ms]']
 
 export function LoadingOverlay() {
   const [dots, setDots] = useState('')
@@ -6,27 +9,35 @@ export function LoadingOverlay() {
   useEffect(() => {
     const timer = setInterval(() => {
       setDots((prev) => (prev.length >= 3 ? '' : prev + '.'))
-    }, 500)
+    }, 600)
     return () => clearInterval(timer)
   }, [])
 
+  const dotElements = useMemo(
+    () =>
+      [0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className={cn(
+            'block w-2.5 h-2.5 rounded-full bg-primary animate-breathe',
+            delayClasses[i]
+          )}
+        />
+      )),
+    []
+  )
+
   return (
-    <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="text-center">
-        <div className="inline-flex gap-1 mb-4">
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              className="w-3 h-3 rounded-full bg-blue-500 animate-bounce"
-              style={{ animationDelay: `${i * 0.15}s` }}
-            />
-          ))}
+    <div className="fixed inset-0 bg-cream/90 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="text-center animate-fade-in-up">
+        <div className="mb-6 flex items-center justify-center gap-3">
+          {dotElements}
         </div>
-        <p className="text-lg text-gray-600">
-          AI 正在为你生成句子{dots}
+        <p className="text-base text-text-secondary font-medium">
+          AI is generating sentences{dots}
         </p>
-        <p className="text-sm text-gray-400 mt-2">
-          这可能需要 15-30 秒，请耐心等待
+        <p className="text-sm text-text-muted mt-2.5">
+          This may take 15-30 seconds
         </p>
       </div>
     </div>

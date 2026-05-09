@@ -4,6 +4,7 @@ import {
   closestCenter,
   type DragEndEvent,
 } from '@dnd-kit/core'
+import { Button } from '@/components/ui/button'
 import { useExerciseStore, usePhase, useCurrentGroup, useIsGroupComplete } from '@/stores/useExerciseStore'
 import { WordInput } from '@/components/WordInput'
 import { WordBank } from '@/components/WordBank'
@@ -49,21 +50,23 @@ function ExercisingPhase() {
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <div className="max-w-3xl mx-auto p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">English Sentence Builder</h1>
+      <div className="max-w-3xl mx-auto px-5 py-8">
+        <div className="flex items-center justify-between mb-7">
+          <h1 className="font-serif text-2xl font-medium text-text tracking-tight">
+            Sentence Builder
+          </h1>
           <RegenerateButton />
         </div>
 
-        <div className="mb-6">
+        <div className="mb-7">
           <WordBank groupIdx={groupIdx} />
         </div>
 
         <SentenceList groupIdx={groupIdx} />
 
         {isComplete && (
-          <p className="text-center text-green-600 font-semibold mt-4 animate-bounce">
-            🎉 本组完成！
+          <p className="text-center text-success font-medium mt-5 animate-fade-in-up select-none">
+            This group is complete
           </p>
         )}
 
@@ -77,20 +80,36 @@ function CompletedPhase() {
   const resetAll = useExerciseStore((s) => s.resetAll)
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          🎉 全部完成！
+    <div className="min-h-screen flex items-center justify-center bg-cream px-5">
+      <div className="text-center animate-fade-in-up">
+        <div className="mb-6">
+          <svg
+            className="mx-auto text-primary"
+            width="56"
+            height="56"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>
+        </div>
+        <h1 className="font-serif text-3xl font-medium text-text mb-3 tracking-tight">
+          All complete
         </h1>
-        <p className="text-gray-600 mb-6">
-          你已完成所有句子的填空练习，太棒了！
+        <p className="text-text-secondary mb-8 text-base leading-relaxed">
+          You have finished all the sentence exercises.
         </p>
-        <button
+        <Button
           onClick={resetAll}
-          className="inline-flex items-center justify-center rounded-md bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+          className="bg-primary hover:bg-primary-hover text-surface rounded-xl px-7 py-2.5 h-auto text-sm font-medium shadow-none transition-all duration-200 hover:shadow-md"
         >
-          再来一组
-        </button>
+          Start new exercise
+        </Button>
       </div>
     </div>
   )

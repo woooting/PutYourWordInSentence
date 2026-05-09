@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import { useExerciseStore } from '@/stores/useExerciseStore'
 import { generateSentences } from '@/lib/api'
 
@@ -73,74 +72,79 @@ export function WordInput() {
   const canGenerate = inputWords.length >= 20 && !isLoading
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center mb-8">
-        English Sentence Builder
-      </h1>
+    <div className="max-w-2xl mx-auto px-5 py-12">
+      <div className="text-center mb-10">
+        <h1 className="font-serif text-3xl font-medium text-text tracking-tight mb-2">
+          Sentence Builder
+        </h1>
+        <p className="text-text-secondary text-sm">
+          Type or paste English words to generate fill-in-the-blank exercises
+        </p>
+      </div>
 
-      <div className="mb-6">
-        <p className="text-sm text-gray-500 mb-2">
-          输入至少 20 个英文单词，用逗号、空格或回车分隔
+      <div className="mb-7">
+        <p className="text-xs text-text-muted mb-2.5 tracking-wide uppercase">
+          Enter at least 20 words
         </p>
         <Input
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="输入单词后按回车添加..."
+          placeholder="Type a word and press Enter..."
           disabled={isLoading}
-          className="w-full"
+          className="h-11 rounded-xl border-border bg-surface px-4 text-text placeholder:text-text-muted focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200 text-sm"
         />
       </div>
 
       {inputWords.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-6 p-4 bg-gray-50 rounded-lg min-h-[60px]">
+        <div className="flex flex-wrap gap-2.5 mb-7 p-5 bg-surface rounded-2xl border border-border-light min-h-[60px] animate-fade-in-up">
           {inputWords.map((word, index) => (
-            <Badge
+            <span
               key={`${word}-${index}`}
-              variant="secondary"
-              className="text-base py-1.5 px-3 cursor-pointer hover:bg-gray-200 transition-colors group"
               onClick={() => removeWord(index)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-tag text-text text-sm font-medium rounded-full cursor-pointer transition-all duration-200 hover:bg-tag-hover hover:scale-105 select-none group"
             >
               {word}
-              <span className="ml-1.5 text-gray-400 group-hover:text-red-500 transition-colors">
+              <span className="text-text-muted group-hover:text-error transition-colors duration-200 text-xs leading-none">
                 ×
               </span>
-            </Badge>
+            </span>
           ))}
         </div>
       )}
 
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-500">
-          已输入{' '}
+        <span className="text-sm text-text-secondary">
           <span
             className={
-              inputWords.length >= 20 ? 'text-green-600 font-semibold' : 'text-red-500 font-semibold'
+              inputWords.length >= 20
+                ? 'text-success font-semibold'
+                : 'text-error font-semibold'
             }
           >
             {inputWords.length}
-          </span>{' '}
-          / 20 个单词
+          </span>
+          <span className="text-text-muted"> / 20 words</span>
         </span>
         <Button
           onClick={handleGenerate}
           disabled={!canGenerate}
-          className="min-w-[120px]"
+          className="min-w-[128px] h-10 rounded-xl bg-primary hover:bg-primary-hover text-surface shadow-none transition-all duration-200 hover:shadow-md disabled:opacity-40 text-sm font-medium"
         >
-          {isLoading ? '生成中...' : '生成句子'}
+          {isLoading ? 'Generating...' : 'Generate Sentences'}
         </Button>
       </div>
 
       {!canGenerate && inputWords.length > 0 && (
-        <p className="text-sm text-amber-600 mt-3">
-          还需要至少 {20 - inputWords.length} 个单词才能生成句子
+        <p className="text-xs text-text-muted mt-4 pl-1">
+          Need {20 - inputWords.length} more word{20 - inputWords.length > 1 ? 's' : ''} to generate
         </p>
       )}
 
       {error && (
-        <p className="text-sm text-red-500 mt-3 p-3 bg-red-50 rounded-md">
-          {error}
-        </p>
+        <div className="mt-5 p-4 bg-error-bg border border-error/30 rounded-xl animate-fade-in-up">
+          <p className="text-sm text-error">{error}</p>
+        </div>
       )}
     </div>
   )
