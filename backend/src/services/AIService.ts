@@ -47,6 +47,11 @@ function parseAIResponse(raw: string): AIGeneratedSentence[] {
   if (!Array.isArray(parsed)) {
     throw new SystemError('AI 返回格式异常，未返回数组')
   }
+  for (const item of parsed) {
+    if (!item.word || !item.sentence || !item.chinese) {
+      throw new SystemError('AI 返回格式异常，缺少必填字段')
+    }
+  }
   return parsed as AIGeneratedSentence[]
 }
 
@@ -109,7 +114,7 @@ export async function generateSentencesWithAI(
         if (!match || !sentenceContainsWord(match.sentence, word)) {
           stillFailed.push(word)
         } else {
-          results.push({ word, sentence: match.sentence })
+          results.push({ word, sentence: match.sentence, chinese: match.chinese })
         }
       }
       pending = stillFailed

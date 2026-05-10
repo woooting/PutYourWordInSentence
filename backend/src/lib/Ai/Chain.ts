@@ -13,8 +13,11 @@ export function createSentenceChain(apiKey: string) {
     configuration: {
       baseURL: 'https://api.deepseek.com',
     },
-    temperature: 0.7,
+    temperature: 0.3,
     timeout: 30000,
+    modelKwargs: {
+      thinking: { type: 'disabled' },
+    },
   })
 
   const prompt = ChatPromptTemplate.fromMessages([

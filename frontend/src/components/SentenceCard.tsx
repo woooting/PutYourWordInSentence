@@ -23,6 +23,7 @@ interface SentenceCardProps {
   globalIndex: number
   groupIdx: number
   blankState: BlankState
+  showChinese: boolean
   onRegenerate?: (globalIndex: number) => void
 }
 
@@ -31,6 +32,7 @@ export function SentenceCard({
   globalIndex,
   groupIdx,
   blankState,
+  showChinese,
   onRegenerate,
 }: SentenceCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
@@ -122,6 +124,12 @@ export function SentenceCard({
           )}
         </div>
       </div>
+
+      {showChinese && sentence.chinese && (
+        <p className="mt-2 text-sm text-text-muted leading-relaxed">
+          {sentence.chinese}
+        </p>
+      )}
     </div>
   )
 }

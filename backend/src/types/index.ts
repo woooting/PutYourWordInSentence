@@ -8,6 +8,7 @@ export type { SystemError } from '../errors/SystemError'
 export interface AIGeneratedSentence {
   word: string
   sentence: string
+  chinese: string
 }
 
 export interface BlankResult {
@@ -15,6 +16,7 @@ export interface BlankResult {
   completeSentence: string
   blankSentence: string
   blankIndex: number
+  chinese: string
 }
 
 export interface GenerateError {

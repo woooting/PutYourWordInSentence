@@ -14,6 +14,7 @@ import { SentenceList } from '@/components/SentenceList'
 import { GroupPagination } from '@/components/GroupPagination'
 import { LoadingOverlay } from '@/components/LoadingOverlay'
 import { RegenerateButton } from '@/components/RegenerateButton'
+import { TranslateButton } from '@/components/TranslateButton'
 
 function InputPhase() {
   return <WordInput />
@@ -65,7 +66,10 @@ function ExercisingPhase() {
           <h1 className="font-serif text-xl font-medium text-text tracking-tight">
             Sentence Builder
           </h1>
-          <RegenerateButton />
+          <div className="flex items-center gap-1">
+            <TranslateButton />
+            <RegenerateButton />
+          </div>
         </header>
 
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">

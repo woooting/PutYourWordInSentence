@@ -11,6 +11,7 @@ interface ExerciseStore {
   sentences: SentenceItem[]
   currentGroup: number
   groupStates: Record<number, GroupState>
+  showChinese: boolean
 
   setInputWords: (words: string[]) => void
   startGenerate: () => void
@@ -18,6 +19,7 @@ interface ExerciseStore {
   checkAnswer: (groupIdx: number, blankIdx: number, word: string) => boolean
   nextGroup: () => void
   prevGroup: () => void
+  toggleChinese: () => void
   resetAll: () => void
 }
 
@@ -27,6 +29,7 @@ export const useExerciseStore = create<ExerciseStore>((set, get) => ({
   sentences: [],
   currentGroup: 0,
   groupStates: {},
+  showChinese: false,
 
   setInputWords: (words) => set({ inputWords: words }),
 
@@ -90,6 +93,8 @@ export const useExerciseStore = create<ExerciseStore>((set, get) => ({
     }
   },
 
+  toggleChinese: () => set((s) => ({ showChinese: !s.showChinese })),
+
   resetAll: () =>
     set({
       phase: 'input',
@@ -97,6 +102,7 @@ export const useExerciseStore = create<ExerciseStore>((set, get) => ({
       sentences: [],
       currentGroup: 0,
       groupStates: {},
+      showChinese: false,
     }),
 }))
 
@@ -130,4 +136,8 @@ export function useIsGroupComplete(groupIdx: number): boolean {
     if (!groupState) return false
     return Object.values(groupState).every((bs: BlankState) => bs.isCorrect)
   })
+}
+
+export function useShowChinese() {
+  return useExerciseStore((s) => s.showChinese)
 }

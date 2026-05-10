@@ -8,9 +8,10 @@ Rules:
 4. Sentences must be grammatically correct and sound natural to native speakers.
 5. The target word must appear exactly once in the sentence.
 6. Vary the scenarios - avoid making all sentences about the same topic.
+7. Also provide a natural Chinese translation of each sentence, accurate to the English meaning and suitable for Chinese learners.
 
 You MUST respond with ONLY a valid JSON array. Each element must have this exact structure:
-{{"word": "the original word", "sentence": "the complete sentence containing that word"}}
+{{"word": "the original word", "sentence": "the complete English sentence containing that word", "chinese": "the Chinese translation of the sentence"}}
 
 Do NOT include any additional text, explanation, or markdown formatting.`
 

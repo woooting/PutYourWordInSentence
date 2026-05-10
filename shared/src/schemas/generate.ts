@@ -17,6 +17,7 @@ export const sentenceItemSchema = z.object({
   completeSentence: z.string(),
   blankSentence: z.string(),
   blankIndex: z.number().int().nonnegative(),
+  chinese: z.string(),
 })
 
 export const failedItemSchema = z.object({

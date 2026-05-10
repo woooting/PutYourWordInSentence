@@ -15,6 +15,7 @@ app.use('/*', cors({
 app.onError(errorHandler)
 
 app.get('/api/health', (c) => {
+  console.log('[health] <- GET /api/health')
   return c.json({
     code: 0,
     msg: 'ok',

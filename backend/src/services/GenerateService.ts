@@ -50,13 +50,14 @@ function createBlank(sentence: string, word: string): Pick<BlankResult, 'blankSe
 export async function generateService(words: string[], apiKey: string): Promise<GenerateResponse> {
   const { success, failed } = await generateSentencesWithAI(words, apiKey)
 
-  const sentences = success.map(({ word, sentence }) => {
+  const sentences = success.map(({ word, sentence, chinese }) => {
     const { blankSentence, blankIndex } = createBlank(sentence, word)
     return {
       word,
       completeSentence: capitalizeFirstLetter(sentence),
       blankSentence,
       blankIndex,
+      chinese,
     }
   })
 
