@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import type { SentenceItem } from '@project/shared'
-import { groupSentences } from '@/lib/utils'
+import { groupSentences, shuffleArray } from '@/lib/utils'
 import type { ExercisePhase, BlankState, GroupState } from '@/types'
 
 const GROUP_SIZE = 5
@@ -33,12 +33,13 @@ export const useExerciseStore = create<ExerciseStore>((set, get) => ({
   startGenerate: () => set({ phase: 'loading' }),
 
   setSentences: (sentences) => {
-    const groups = groupSentences(sentences, GROUP_SIZE)
+    const shuffled = shuffleArray(sentences)
+    const groups = groupSentences(shuffled, GROUP_SIZE)
     const initialStates: Record<number, GroupState> = {}
 
     groups.forEach((group, gIdx) => {
       const groupState: GroupState = {}
-      group.forEach((item, sIdx) => {
+      group.forEach((_item, sIdx) => {
         const blankIdx = gIdx * GROUP_SIZE + sIdx
         groupState[blankIdx] = { placedWord: null, isCorrect: false, shakeStamp: 0 }
       })
@@ -46,7 +47,7 @@ export const useExerciseStore = create<ExerciseStore>((set, get) => ({
     })
 
     set({
-      sentences,
+      sentences: shuffled,
       groupStates: initialStates,
       currentGroup: 0,
       phase: 'exercising',

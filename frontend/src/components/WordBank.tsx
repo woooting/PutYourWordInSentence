@@ -55,7 +55,7 @@ export function WordBank({ groupIdx }: WordBankProps) {
       <p className="text-xs text-text-muted mb-3.5 tracking-wide uppercase">
         Word Bank
       </p>
-      <div className="flex flex-wrap gap-2.5 justify-center">
+      <div className="grid grid-cols-2 gap-2.5 place-items-center">
         {shuffled.map((word) => (
           <DraggableWordCard
             key={word}

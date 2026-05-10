@@ -60,27 +60,35 @@ function ExercisingPhase() {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="max-w-3xl mx-auto px-5 py-8">
-        <div className="flex items-center justify-between mb-7">
-          <h1 className="font-serif text-2xl font-medium text-text tracking-tight">
+      <div className="h-screen flex flex-col">
+        <header className="shrink-0 flex items-center justify-between px-5 py-3 border-b border-border-light">
+          <h1 className="font-serif text-xl font-medium text-text tracking-tight">
             Sentence Builder
           </h1>
           <RegenerateButton />
+        </header>
+
+        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+          <div className="lg:flex-[7] flex flex-col order-2 lg:order-1 overflow-hidden">
+            <div className="flex-1 overflow-y-auto px-5 py-4">
+              <SentenceList groupIdx={groupIdx} />
+              {isComplete && (
+                <p className="text-center text-success font-medium mt-5 animate-fade-in-up select-none">
+                  This group is complete
+                </p>
+              )}
+            </div>
+            <div className="shrink-0 px-5 py-3 border-t border-border-light">
+              <GroupPagination groupIdx={groupIdx} />
+            </div>
+          </div>
+
+          <div className="lg:flex-[3] lg:shrink-0 flex border-t lg:border-t-0 lg:border-l border-border-light order-1 lg:order-2 overflow-hidden">
+            <div className="flex-1 overflow-y-auto p-3">
+              <WordBank groupIdx={groupIdx} />
+            </div>
+          </div>
         </div>
-
-        <div className="mb-7">
-          <WordBank groupIdx={groupIdx} />
-        </div>
-
-        <SentenceList groupIdx={groupIdx} />
-
-        {isComplete && (
-          <p className="text-center text-success font-medium mt-5 animate-fade-in-up select-none">
-            This group is complete
-          </p>
-        )}
-
-        <GroupPagination groupIdx={groupIdx} />
       </div>
 
       <DragOverlay dropAnimation={null}>
