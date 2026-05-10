@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import type { SentenceItem } from '@project/shared'
-import { groupSentences, pickRandom } from '@/lib/utils'
+import { groupSentences } from '@/lib/utils'
 import type { ExercisePhase, BlankState, GroupState } from '@/types'
 
 const GROUP_SIZE = 5
@@ -40,7 +40,7 @@ export const useExerciseStore = create<ExerciseStore>((set, get) => ({
       const groupState: GroupState = {}
       group.forEach((item, sIdx) => {
         const blankIdx = gIdx * GROUP_SIZE + sIdx
-        groupState[blankIdx] = { placedWord: null, isCorrect: false }
+        groupState[blankIdx] = { placedWord: null, isCorrect: false, shakeStamp: 0 }
       })
       initialStates[gIdx] = groupState
     })
@@ -60,7 +60,12 @@ export const useExerciseStore = create<ExerciseStore>((set, get) => ({
 
     const newGroupStates = { ...state.groupStates }
     const newGroupState = { ...newGroupStates[groupIdx] }
-    newGroupState[blankIdx] = { placedWord: word, isCorrect }
+    const prevBlank = newGroupState[blankIdx]
+    newGroupState[blankIdx] = {
+      placedWord: word,
+      isCorrect,
+      shakeStamp: isCorrect ? prevBlank.shakeStamp : prevBlank.shakeStamp + 1,
+    }
     newGroupStates[groupIdx] = newGroupState
 
     set({ groupStates: newGroupStates })
@@ -112,27 +117,6 @@ export function useCurrentGroup() {
 
 export function useGroupStates() {
   return useExerciseStore((s) => s.groupStates)
-}
-
-export function useWordBank(groupIdx: number): {
-  correctWords: string[]
-  distractorWords: string[]
-} {
-  return useExerciseStore((s) => {
-    const groupStart = groupIdx * GROUP_SIZE
-    const groupEnd = groupStart + GROUP_SIZE
-    const correctWords = s.sentences
-      .slice(groupStart, groupEnd)
-      .map((item) => item.word)
-
-    const otherWords = s.sentences
-      .filter((_, i) => i < groupStart || i >= groupEnd)
-      .map((item) => item.word)
-
-    const distractorWords = pickRandom(otherWords, GROUP_SIZE)
-
-    return { correctWords, distractorWords }
-  })
 }
 
 export function useGroupTotal() {

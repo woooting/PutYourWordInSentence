@@ -239,41 +239,41 @@ Put the word in sentence/
 ### Phase 4 - 前端核心 UI
 **目标**：完整的交互界面
 
-- [ ] 4.1 单词输入区（`WordInput.tsx`）
+- [x] 4.1 单词输入区（`WordInput.tsx`）
   - Tag 式输入：输入框 + Enter/逗号/空格 添加单词 tag
   - 每个 tag 可点击 × 删除
   - 实时显示已输入单词数量
   - 不足20个时"生成句子"按钮 disabled + 文字提示
   - 自动去重（输入时忽略重复）
-- [ ] 4.2 句子卡片（`SentenceCard.tsx`）
+- [x] 4.2 句子卡片（`SentenceCard.tsx`）
   - 使用 shadcn `Card` 组件
   - 显示挖空句子，空位处为 `useDroppable` DropZone
   - 已填入单词时，DropZone 显示该单词
   - 正确状态：绿色边框 + 右侧 ✅ icon + 单词不可移除
   - 错误状态：红色边框 + 右侧 ❌ icon + 单词可被新拖入覆盖
   - 未填充状态：虚线边框占位
-- [ ] 4.3 词库区（`WordBank.tsx`）
+- [x] 4.3 词库区（`WordBank.tsx`）
   - 显示当前组的10个单词（5正确 + 5干扰，随机排列）
   - 每个单词为 `useDraggable` 元素
   - 使用 shadcn `Badge` 样式
   - 已正确拖入的单词变灰不可拖拽
   - 错误拖入后单词回到词库（或不回，看设计——按需求说单词停留在句子中，所以不回词库但可被覆盖）
-- [ ] 4.4 翻页组件（`GroupPagination.tsx`）
+- [x] 4.4 翻页组件（`GroupPagination.tsx`）
   - "上一组" / "下一组" 按钮
   - 当前组序号 / 总组数 显示（如 "第 2/4 组"）
   - 当前组未全部正确填写时"下一组"做二次确认提示
   - 最后一组显示"完成"而非"下一组"
-- [ ] 4.5 重新生成按钮（`RegenerateButton.tsx`）
+- [x] 4.5 重新生成按钮（`RegenerateButton.tsx`）
   - 全局"重新生成所有句子"按钮（shadcn `Button` variant="outline"）
   - 每个 `SentenceCard` 右上角单独的重生成图标按钮
 
 ### Phase 5 - 拖拽逻辑 & 状态管理
 **目标**：完整的拖拽交互 + 状态流转
 
-- [ ] 5.1 安装 @dnd-kit
+- [x] 5.1 安装 @dnd-kit
   - `@dnd-kit/core` + `@dnd-kit/utilities`
   - 根组件包裹 `<DndContext>`
-- [ ] 5.2 实现 `useExercise` hook（核心状态）
+- [x] 5.2 实现 `useExercise` hook（核心状态）
   ```ts
   interface ExerciseState {
     phase: 'input' | 'loading' | 'exercising' | 'completed';
@@ -286,11 +286,11 @@ Put the word in sentence/
   - 分组逻辑：输入时按5个一组切割
   - 词库生成逻辑：当前组5个正确词 + 从其他组随机抽5个干扰词
   - 判对逻辑：拖入单词 === 该空位的正确单词时标记正确
-- [ ] 5.3 实现 `useDragDrop` hook
+- [x] 5.3 实现 `useDragDrop` hook
   - 封装 `onDragStart` / `onDragEnd` / `onDragOver` 事件
   - 正确处理：更新句子状态、标记 word 已用
   - 错误处理：触发震动动画
-- [ ] 5.4 震动动画 CSS
+- [x] 5.4 震动动画 CSS
   ```css
   @keyframes shake {
     0%, 100% { transform: translateX(0); }
@@ -303,7 +303,7 @@ Put the word in sentence/
     animation: shake 0.4s ease-in-out;
   }
   ```
-- [ ] 5.5 完成状态
+- [x] 5.5 完成状态
   - 当前组所有句子均正确填写后，自动弹出一行提示"本组完成！"
   - 全部组完成 → phase 变为 `completed`，显示总结界面
 

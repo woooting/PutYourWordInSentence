@@ -1,3 +1,3 @@
-## Communication
-Chinese must be used when generating thinking content.
-Always output content in Chinese
+## 沟通规范：
+在生成思考内容时，必须使用中文。
+始终用中文输出内容。

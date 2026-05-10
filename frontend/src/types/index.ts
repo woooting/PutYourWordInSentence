@@ -14,6 +14,7 @@ export interface Group {
 export interface BlankState {
   placedWord: string | null
   isCorrect: boolean
+  shakeStamp: number
 }
 
 export interface GroupState {

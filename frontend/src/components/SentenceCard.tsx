@@ -1,8 +1,22 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import { cn } from '@/lib/utils'
 import type { SentenceItem } from '@project/shared'
 import type { BlankState } from '@/types'
+
+const shakeKeyframes: Keyframe[] = [
+  { transform: 'translateX(0)' },
+  { transform: 'translateX(-6px)' },
+  { transform: 'translateX(6px)' },
+  { transform: 'translateX(-4px)' },
+  { transform: 'translateX(4px)' },
+  { transform: 'translateX(0)' },
+]
+
+const shakeOptions: KeyframeAnimationOptions = {
+  duration: 400,
+  easing: 'ease-in-out',
+}
 
 interface SentenceCardProps {
   sentence: SentenceItem
@@ -19,18 +33,23 @@ export function SentenceCard({
   blankState,
   onRegenerate,
 }: SentenceCardProps) {
-  const [shakeKey, setShakeKey] = useState(0)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const mountedRef = useRef(false)
   const droppableId = `blank:${groupIdx}:${globalIndex}`
   const { isOver, setNodeRef } = useDroppable({ id: droppableId })
 
-  const { placedWord, isCorrect } = blankState
+  const { placedWord, isCorrect, shakeStamp } = blankState
   const filled = placedWord !== null
 
   useEffect(() => {
-    if (placedWord && !isCorrect) {
-      setShakeKey((k) => k + 1)
+    if (!mountedRef.current) {
+      mountedRef.current = true
+      return
     }
-  }, [placedWord])
+    if (shakeStamp > 0 && placedWord && !isCorrect && cardRef.current) {
+      cardRef.current.animate(shakeKeyframes, shakeOptions)
+    }
+  }, [shakeStamp, placedWord, isCorrect])
 
   let zoneClass = 'drop-zone'
   if (filled) {
@@ -43,9 +62,9 @@ export function SentenceCard({
 
   return (
     <div
+      ref={cardRef}
       className={cn(
         'bg-surface border border-border-light rounded-2xl p-4 transition-all duration-200 hover:shadow-sm',
-        filled && !isCorrect && shakeKey > 0 && 'animate-shake',
         filled && isCorrect && 'border-success/40 bg-success-bg/50'
       )}
     >

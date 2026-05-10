@@ -24,4 +24,6 @@ app.get('/api/health', (c) => {
 
 app.route('/api', generateRoute)
 
-serve({ fetch: app.fetch, port: 3001 })
+serve({ fetch: app.fetch, port: 3001 }, (info) => {
+  console.log(`Server running at http://localhost:${info.port}`)
+})

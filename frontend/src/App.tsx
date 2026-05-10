@@ -1,7 +1,9 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import {
   DndContext,
-  closestCenter,
+  DragOverlay,
+  pointerWithin,
+  type DragStartEvent,
   type DragEndEvent,
 } from '@dnd-kit/core'
 import { Button } from '@/components/ui/button'
@@ -25,9 +27,16 @@ function ExercisingPhase() {
   const groupIdx = useCurrentGroup()
   const isComplete = useIsGroupComplete(groupIdx)
   const checkAnswer = useExerciseStore((s) => s.checkAnswer)
+  const [activeWord, setActiveWord] = useState<string | null>(null)
+
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    const word = String(event.active.data.current?.word ?? '')
+    if (word) setActiveWord(word)
+  }, [])
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
+      setActiveWord(null)
       const { active, over } = event
       if (!over) return
 
@@ -47,7 +56,8 @@ function ExercisingPhase() {
 
   return (
     <DndContext
-      collisionDetection={closestCenter}
+      collisionDetection={pointerWithin}
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
       <div className="max-w-3xl mx-auto px-5 py-8">
@@ -72,6 +82,14 @@ function ExercisingPhase() {
 
         <GroupPagination groupIdx={groupIdx} />
       </div>
+
+      <DragOverlay dropAnimation={null}>
+        {activeWord ? (
+          <span className="px-4 py-2 rounded-full text-sm font-medium bg-surface border border-border text-text shadow-lg scale-105 select-none">
+            {activeWord}
+          </span>
+        ) : null}
+      </DragOverlay>
     </DndContext>
   )
 }

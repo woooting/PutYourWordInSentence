@@ -1,15 +1,38 @@
 import { useMemo } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import { cn } from '@/lib/utils'
-import { useWordBank, useGroupStates } from '@/stores/useExerciseStore'
+import { pickRandom } from '@/lib/utils'
+import { useSentences, useGroupStates } from '@/stores/useExerciseStore'
+
+const GROUP_SIZE = 5
 
 interface WordBankProps {
   groupIdx: number
 }
 
+/**
+ * 词库区：显示当前组的10个可拖拽单词（5正确+5干扰）
+ * 已正确拖入的单词变灰不可拖拽
+ */
 export function WordBank({ groupIdx }: WordBankProps) {
-  const { correctWords, distractorWords } = useWordBank(groupIdx)
+  const sentences = useSentences()
   const groupStates = useGroupStates()
+
+  const { correctWords, distractorWords } = useMemo(() => {
+    const groupStart = groupIdx * GROUP_SIZE
+    const groupEnd = groupStart + GROUP_SIZE
+    const correctWords = sentences
+      .slice(groupStart, groupEnd)
+      .map((item) => item.word)
+
+    const otherWords = sentences
+      .filter((_, i) => i < groupStart || i >= groupEnd)
+      .map((item) => item.word)
+
+    const distractorWords = pickRandom(otherWords, GROUP_SIZE)
+
+    return { correctWords, distractorWords }
+  }, [sentences, groupIdx])
 
   const usedCorrectWords = useMemo(() => {
     const groupState = groupStates[groupIdx]
@@ -53,19 +76,12 @@ function DraggableWordCard({
   isUsed: boolean
 }) {
   const draggableId = `word:${word.toLowerCase()}`
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
+  const { attributes, listeners, setNodeRef, isDragging } =
     useDraggable({
       id: draggableId,
       data: { type: 'word-bank', word },
       disabled: isUsed,
     })
-
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-        zIndex: 50,
-      }
-    : undefined
 
   return (
     <div
@@ -78,9 +94,8 @@ function DraggableWordCard({
           'bg-surface-alt text-text-muted cursor-not-allowed opacity-50',
         !isUsed &&
           'bg-surface border border-border text-text cursor-grab hover:border-primary hover:text-primary hover:shadow-sm hover:-translate-y-0.5 active:cursor-grabbing active:scale-95',
-        isDragging && !isUsed && 'opacity-60 shadow-lg scale-105'
+        isDragging && !isUsed && 'opacity-0 scale-95'
       )}
-      style={style}
     >
       {word}
     </div>
