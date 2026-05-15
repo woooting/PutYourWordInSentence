@@ -68,6 +68,7 @@ export function WordBank({ groupIdx }: WordBankProps) {
   )
 }
 
+/** 单个可拖拽单词卡片，已使用时置灰并禁用拖拽 */
 function DraggableWordCard({
   word,
   isUsed,

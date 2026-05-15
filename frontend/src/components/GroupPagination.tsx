@@ -6,6 +6,7 @@ interface GroupPaginationProps {
   groupIdx: number
 }
 
+/** 翻页导航：上/下一组按钮 + 页码，最后一组变"完成"，未完成跳转时二次确认 */
 export function GroupPagination({ groupIdx }: GroupPaginationProps) {
   const nextGroup = useExerciseStore((s) => s.nextGroup)
   const prevGroup = useExerciseStore((s) => s.prevGroup)

@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils'
 
 const delayClasses = ['[animation-delay:0ms]', '[animation-delay:300ms]', '[animation-delay:600ms]']
 
+/** 全屏 loading 遮罩，显示呼吸灯动画和动态省略号 */
 export function LoadingOverlay() {
   const [dots, setDots] = useState('')
 

@@ -23,6 +23,7 @@ interface ExerciseStore {
   resetAll: () => void
 }
 
+/** 核心练习状态管理，包含阶段切换、句子分组、答案校验等 */
 export const useExerciseStore = create<ExerciseStore>((set, get) => ({
   phase: 'input',
   inputWords: [],
@@ -35,6 +36,7 @@ export const useExerciseStore = create<ExerciseStore>((set, get) => ({
 
   startGenerate: () => set({ phase: 'loading' }),
 
+  /** 保存 AI 返回的句子，打乱后按组切分并初始化各句子的填空状态 */
   setSentences: (sentences) => {
     const shuffled = shuffleArray(sentences)
     const groups = groupSentences(shuffled, GROUP_SIZE)
@@ -57,6 +59,7 @@ export const useExerciseStore = create<ExerciseStore>((set, get) => ({
     })
   },
 
+  /** 校验拖入单词是否正确，更新填空状态并递增错误时的 shakeStamp */
   checkAnswer: (groupIdx, blankIdx, word) => {
     const state = get()
     const sentence = state.sentences[blankIdx]
@@ -130,6 +133,7 @@ export function useGroupTotal() {
   return useExerciseStore((s) => Math.ceil(s.sentences.length / GROUP_SIZE))
 }
 
+/** 判断指定组是否所有句子均已正确填写 */
 export function useIsGroupComplete(groupIdx: number): boolean {
   return useExerciseStore((s) => {
     const groupState = s.groupStates[groupIdx]

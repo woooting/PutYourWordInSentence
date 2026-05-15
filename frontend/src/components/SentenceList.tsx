@@ -8,6 +8,7 @@ interface SentenceListProps {
   groupIdx: number
 }
 
+/** 当前组的句子列表容器，按组索引切片渲染 5 个 SentenceCard */
 export function SentenceList({ groupIdx }: SentenceListProps) {
   const sentences = useSentences()
   const groupStates = useGroupStates()

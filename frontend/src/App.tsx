@@ -6,7 +6,6 @@ import {
   type DragStartEvent,
   type DragEndEvent,
 } from '@dnd-kit/core'
-import { Button } from '@/components/ui/button'
 import { useExerciseStore, usePhase, useCurrentGroup, useIsGroupComplete } from '@/stores/useExerciseStore'
 import { WordInput } from '@/components/WordInput'
 import { WordBank } from '@/components/WordBank'
@@ -15,15 +14,19 @@ import { GroupPagination } from '@/components/GroupPagination'
 import { LoadingOverlay } from '@/components/LoadingOverlay'
 import { RegenerateButton } from '@/components/RegenerateButton'
 import { TranslateButton } from '@/components/TranslateButton'
+import { MistakeReview } from '@/components/MistakeReview'
 
+/** 输入阶段：展示单词输入面板 */
 function InputPhase() {
   return <WordInput />
 }
 
+/** 加载阶段：显示全屏 loading 遮罩 */
 function LoadingPhase() {
   return <LoadingOverlay />
 }
 
+/** 练习阶段：DndContext 包裹词库+句子列表+翻页，处理拖拽判题 */
 function ExercisingPhase() {
   const groupIdx = useCurrentGroup()
   const isComplete = useIsGroupComplete(groupIdx)
@@ -106,45 +109,12 @@ function ExercisingPhase() {
   )
 }
 
+/** 完成阶段：展示错题回顾页，无错题时展示 Perfect 空状态 */
 function CompletedPhase() {
-  const resetAll = useExerciseStore((s) => s.resetAll)
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-cream px-5">
-      <div className="text-center animate-fade-in-up">
-        <div className="mb-6">
-          <svg
-            className="mx-auto text-primary"
-            width="56"
-            height="56"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="m9 12 2 2 4-4" />
-          </svg>
-        </div>
-        <h1 className="font-serif text-3xl font-medium text-text mb-3 tracking-tight">
-          All complete
-        </h1>
-        <p className="text-text-secondary mb-8 text-base leading-relaxed">
-          You have finished all the sentence exercises.
-        </p>
-        <Button
-          onClick={resetAll}
-          className="bg-primary hover:bg-primary-hover text-surface rounded-xl px-7 py-2.5 h-auto text-sm font-medium shadow-none transition-all duration-200 hover:shadow-md"
-        >
-          Start new exercise
-        </Button>
-      </div>
-    </div>
-  )
+  return <MistakeReview />
 }
 
+/** 根组件，根据 phase 切换 input→loading→exercising→completed 四个阶段 */
 export function App() {
   const phase = usePhase()
 

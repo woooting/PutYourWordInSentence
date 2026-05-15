@@ -6,6 +6,7 @@ export interface ApiResponse<T = unknown> {
   data: T
 }
 
+/** Axios 实例，baseURL=/api，拦截器自动解包统一响应 {code,msg,data} */
 export const http = axios.create({
   baseURL: '/api',
   timeout: 30000,

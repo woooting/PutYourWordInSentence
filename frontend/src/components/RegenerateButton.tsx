@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { useExerciseStore } from '@/stores/useExerciseStore'
 import { generateSentences } from '@/lib/api'
 
+/** 全局重新生成按钮，用原单词列表重新调用 AI */
 export function RegenerateButton() {
   const { inputWords, startGenerate, setSentences } = useExerciseStore()
 

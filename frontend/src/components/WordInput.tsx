@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { useExerciseStore } from '@/stores/useExerciseStore'
 import { generateSentences } from '@/lib/api'
 
+/** 单词输入区：Tag 式输入、自动去重、数量校验、调用生成 API */
 export function WordInput() {
   const { inputWords, setInputWords, startGenerate, setSentences } =
     useExerciseStore()
@@ -12,6 +13,7 @@ export function WordInput() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  /** 解析输入文本为单词数组，去重后追加到列表 */
   const addWords = useCallback(
     (input: string) => {
       const newWords = input
@@ -39,11 +41,12 @@ export function WordInput() {
           addWords(text)
           setText('')
         }
-      }
+      } 
     },
     [text, addWords]
   )
 
+  /** 从列表中移除指定索引的单词 */
   const removeWord = useCallback(
     (index: number) => {
       setInputWords(inputWords.filter((_, i) => i !== index))

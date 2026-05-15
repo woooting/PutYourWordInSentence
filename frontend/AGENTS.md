@@ -74,6 +74,15 @@ src/
 
 - 错误在调用方 try/catch 处理，禁止在 api 层弹 toast
 
+## 注释规范
+- 所有函数必须添加 JSDoc 注释，简要描述函数作用
+- 函数入参和返回值类型由 TypeScript 类型标注，JSDoc 无需重复 `@param` / `@returns`
+- 以下函数无需 JSDoc：
+  - handleXxx 事件处理函数
+  - store 的简单 selector（usePhase、useSentences 等，函数体仅一行取值）
+  - store 的简单 action 包装函数（setXxx、toggleXxx 等，仅调用 set）
+- 工具函数、业务逻辑函数、组件、复杂 hook 必须写 JSDoc
+
 ## 导入顺序
 1. 第三方库 (react, zustand, @dnd-kit, axios)
 2. @project/shared

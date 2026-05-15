@@ -27,6 +27,10 @@ interface SentenceCardProps {
   onRegenerate?: (globalIndex: number) => void
 }
 
+/**
+ * 句子卡片：展示挖空句子，DropZone 接收拖拽单词
+ * 正确绿色锁定，错误红色 + Web Animations API 震动
+ */
 export function SentenceCard({
   sentence,
   globalIndex,
