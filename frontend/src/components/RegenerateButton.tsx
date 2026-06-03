@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { useExerciseStore } from '@/stores/useExerciseStore'
 import { generateSentences } from '@/lib/api'
@@ -14,7 +15,9 @@ export function RegenerateButton() {
     try {
       const result = await generateSentences(inputWords)
       setSentences(result.sentences)
-    } catch {
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'AI生成失败，请稍后重试'
+      toast.error(msg)
       useExerciseStore.setState({ phase: 'input' })
     }
   }, [inputWords, startGenerate, setSentences])

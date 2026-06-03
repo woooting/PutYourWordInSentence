@@ -25,12 +25,26 @@ export const failedItemSchema = z.object({
   reason: z.string(),
 })
 
+export const singleGenerateRequestSchema = z.object({
+  word: z
+    .string()
+    .min(1, 'Word cannot be empty')
+    .max(30, 'Word too long')
+    .regex(/^[a-zA-Z]+$/, 'Only English letters allowed'),
+})
+
 export const generateResponseSchema = z.object({
   sentences: z.array(sentenceItemSchema),
   failed: z.array(failedItemSchema),
 })
 
+export const singleGenerateResponseSchema = z.object({
+  sentence: sentenceItemSchema,
+})
+
 export type GenerateRequest = z.infer<typeof generateRequestSchema>
 export type GenerateResponse = z.infer<typeof generateResponseSchema>
+export type SingleGenerateRequest = z.infer<typeof singleGenerateRequestSchema>
+export type SingleGenerateResponse = z.infer<typeof singleGenerateResponseSchema>
 export type SentenceItem = z.infer<typeof sentenceItemSchema>
 export type FailedItem = z.infer<typeof failedItemSchema>

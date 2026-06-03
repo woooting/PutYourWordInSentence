@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-cream: #faf8f5;
   --color-surface: #fefdfb;
@@ -22,6 +24,28 @@
 
   --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
   --font-serif: 'Fraunces', ui-serif, Georgia, serif;
+}
+
+/* 深色模式颜色覆盖 */
+.dark {
+  --color-cream: #1a1816;
+  --color-surface: #242220;
+  --color-surface-alt: #2d2b28;
+  --color-primary: #95b5a8;
+  --color-primary-hover: #a3c4b7;
+  --color-primary-light: #2a3a34;
+  --color-accent: #d4a88a;
+  --color-text: #ebe5df;
+  --color-text-secondary: #a09890;
+  --color-text-muted: #6b6560;
+  --color-border: #3d3a36;
+  --color-border-light: #33302c;
+  --color-success: #a2c9a5;
+  --color-success-bg: #2a3a2e;
+  --color-error: #d4b0b0;
+  --color-error-bg: #3a2e2e;
+  --color-tag: #38342e;
+  --color-tag-hover: #48433c;
 }
 
 @keyframes shake {
@@ -47,6 +71,11 @@
   50%      { box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-primary) 0%, transparent); }
 }
 
+@keyframes sonar {
+  0%, 100% { transform: scaleY(0.4); }
+  50%      { transform: scaleY(1); }
+}
+
 /* ========== Utilities ========== */
 
 @utility animate-shake {
@@ -62,17 +91,25 @@
 }
 
 @utility drop-zone {
-  min-width: 130px;
-  min-height: 38px;
+  min-width: 100px;
+  min-height: 32px;
   border: 2px dashed var(--color-border);
   border-radius: 0.625rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.3rem 0.875rem;
+  padding: 0.2rem 0.625rem;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   background: var(--color-surface-alt);
   cursor: default;
+}
+
+@media (min-width: 640px) {
+  .drop-zone {
+    min-width: 130px;
+    min-height: 38px;
+    padding: 0.3rem 0.875rem;
+  }
 }
 
 @utility drop-zone-correct {

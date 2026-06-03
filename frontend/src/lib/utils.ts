@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import type { SentenceItem } from '@project/shared'
 
 /** 合并 Tailwind CSS 类名，自动处理冲突 */
 export function cn(...inputs: ClassValue[]) {
@@ -29,4 +30,30 @@ export function shuffleArray<T>(arr: T[]): T[] {
     ;[result[i], result[j]] = [result[j], result[i]]
   }
   return result
+}
+
+const GROUP_SIZE = 5
+
+/**
+ * 计算当前组的词库单词列表（5正确+5干扰，去重后随机排列）
+ * 用于键盘快捷键获取词库顺序和 WordBank 组件渲染
+ */
+export function getWordBankWords(
+  sentences: SentenceItem[],
+  groupIdx: number
+): string[] {
+  const groupStart = groupIdx * GROUP_SIZE
+  const groupEnd = groupStart + GROUP_SIZE
+  const correctWords = sentences
+    .slice(groupStart, groupEnd)
+    .map((item) => item.word)
+
+  const otherWords = sentences
+    .filter((_, i) => i < groupStart || i >= groupEnd)
+    .map((item) => item.word)
+
+  const distractorWords = pickRandom(otherWords, GROUP_SIZE)
+  const allWords = [...correctWords, ...distractorWords]
+  const unique = [...new Set(allWords.map((w) => w.toLowerCase()))]
+  return unique.sort(() => Math.random() - 0.5)
 }

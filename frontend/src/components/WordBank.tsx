@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { useDraggable } from '@dnd-kit/core'
-import { cn } from '@/lib/utils'
-import { pickRandom } from '@/lib/utils'
+import { cn, pickRandom, shuffleArray } from '@/lib/utils'
 import { useSentences, useGroupStates } from '@/stores/useExerciseStore'
 
 const GROUP_SIZE = 5
@@ -47,20 +46,21 @@ export function WordBank({ groupIdx }: WordBankProps) {
   const shuffled = useMemo(() => {
     const allWords = [...correctWords, ...distractorWords]
     const unique = [...new Set(allWords.map((w) => w.toLowerCase()))]
-    return unique.sort(() => Math.random() - 0.5)
+    return shuffleArray(unique)
   }, [correctWords, distractorWords])
 
   return (
-    <div className="w-full p-5 bg-surface rounded-2xl border border-border-light">
-      <p className="text-xs text-text-muted mb-3.5 tracking-wide uppercase">
+    <div className="w-full p-3 sm:p-5 bg-surface rounded-2xl border border-border-light">
+      <p className="text-xs text-text-muted mb-3 sm:mb-3.5 tracking-wide uppercase">
         Word Bank
       </p>
-      <div className="grid grid-cols-2 gap-2.5 place-items-center">
-        {shuffled.map((word) => (
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5 place-items-center">
+        {shuffled.map((word, idx) => (
           <DraggableWordCard
             key={word}
             word={word}
             isUsed={usedCorrectWords.has(word.toLowerCase())}
+            index={idx}
           />
         ))}
       </div>
@@ -72,9 +72,11 @@ export function WordBank({ groupIdx }: WordBankProps) {
 function DraggableWordCard({
   word,
   isUsed,
+  index,
 }: {
   word: string
   isUsed: boolean
+  index: number
 }) {
   const draggableId = `word:${word.toLowerCase()}`
   const { attributes, listeners, setNodeRef, isDragging } =
@@ -90,7 +92,7 @@ function DraggableWordCard({
       {...listeners}
       {...attributes}
       className={cn(
-        'px-4 py-2 rounded-full text-sm font-medium select-none transition-all duration-200',
+        'px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium select-none transition-all duration-200 inline-flex items-center gap-1.5',
         isUsed &&
           'bg-surface-alt text-text-muted cursor-not-allowed opacity-50',
         !isUsed &&
@@ -98,6 +100,9 @@ function DraggableWordCard({
         isDragging && !isUsed && 'opacity-0 scale-95'
       )}
     >
+      {!isUsed && (
+        <span className="text-[10px] sm:text-[11px] text-text-muted tabular-nums">{index + 1}</span>
+      )}
       {word}
     </div>
   )

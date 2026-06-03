@@ -1,5 +1,5 @@
-import { generateResponseSchema } from '@project/shared'
-import type { GenerateResponse } from '@project/shared'
+import { generateResponseSchema, singleGenerateResponseSchema } from '@project/shared'
+import type { GenerateResponse, SingleGenerateResponse } from '@project/shared'
 import { http } from './http'
 
 /** 健康检查，验证后端连通性 */
@@ -12,4 +12,10 @@ export async function fetchHealth(): Promise<{ timestamp: string }> {
 export async function generateSentences(words: string[]): Promise<GenerateResponse> {
   const { data } = await http.post('/generate', { words })
   return generateResponseSchema.parse(data)
+}
+
+/** 为单个单词重新生成句子 */
+export async function regenerateSentence(word: string): Promise<SingleGenerateResponse> {
+  const { data } = await http.post('/generate/single', { word })
+  return singleGenerateResponseSchema.parse(data)
 }

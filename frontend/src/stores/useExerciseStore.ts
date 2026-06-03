@@ -12,10 +12,12 @@ interface ExerciseStore {
   currentGroup: number
   groupStates: Record<number, GroupState>
   showChinese: boolean
+  startTime: number | null
 
   setInputWords: (words: string[]) => void
   startGenerate: () => void
   setSentences: (sentences: SentenceItem[]) => void
+  replaceSentence: (globalIndex: number, sentence: SentenceItem) => void
   checkAnswer: (groupIdx: number, blankIdx: number, word: string) => boolean
   nextGroup: () => void
   prevGroup: () => void
@@ -31,6 +33,7 @@ export const useExerciseStore = create<ExerciseStore>((set, get) => ({
   currentGroup: 0,
   groupStates: {},
   showChinese: false,
+  startTime: null,
 
   setInputWords: (words) => set({ inputWords: words }),
 
@@ -56,7 +59,23 @@ export const useExerciseStore = create<ExerciseStore>((set, get) => ({
       groupStates: initialStates,
       currentGroup: 0,
       phase: 'exercising',
+      startTime: Date.now(),
     })
+  },
+
+  /** 替换指定索引的句子并重置其填空状态 */
+  replaceSentence: (globalIndex, sentence) => {
+    const state = get()
+    const newSentences = [...state.sentences]
+    newSentences[globalIndex] = sentence
+
+    const groupIdx = Math.floor(globalIndex / GROUP_SIZE)
+    const newGroupStates = { ...state.groupStates }
+    const newGroupState = { ...newGroupStates[groupIdx] }
+    newGroupState[globalIndex] = { placedWord: null, isCorrect: false, shakeStamp: 0 }
+    newGroupStates[groupIdx] = newGroupState
+
+    set({ sentences: newSentences, groupStates: newGroupStates })
   },
 
   /** 校验拖入单词是否正确，更新填空状态并递增错误时的 shakeStamp */
@@ -106,6 +125,7 @@ export const useExerciseStore = create<ExerciseStore>((set, get) => ({
       currentGroup: 0,
       groupStates: {},
       showChinese: false,
+      startTime: null,
     }),
 }))
 
@@ -144,4 +164,8 @@ export function useIsGroupComplete(groupIdx: number): boolean {
 
 export function useShowChinese() {
   return useExerciseStore((s) => s.showChinese)
+}
+
+export function useStartTime() {
+  return useExerciseStore((s) => s.startTime)
 }

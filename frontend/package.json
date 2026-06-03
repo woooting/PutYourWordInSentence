@@ -14,13 +14,13 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@project/shared": "*",
     "@radix-ui/react-slot": "^1.2.4",
-
     "@tailwindcss/vite": "^4.2.4",
     "axios": "^1.16.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.4",
     "zustand": "^5.0.13"

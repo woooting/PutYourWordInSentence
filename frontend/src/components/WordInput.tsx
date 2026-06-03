@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useExerciseStore } from '@/stores/useExerciseStore'
@@ -66,6 +67,7 @@ export function WordInput() {
     } catch (err) {
       const msg = err instanceof Error ? err.message : '生成失败'
       setError(msg)
+      toast.error(msg)
       useExerciseStore.setState({ phase: 'input' })
     } finally {
       setIsLoading(false)
@@ -75,18 +77,18 @@ export function WordInput() {
   const canGenerate = inputWords.length >= 20 && !isLoading
 
   return (
-    <div className="max-w-2xl mx-auto px-5 py-12">
-      <div className="text-center mb-10">
-        <h1 className="font-serif text-3xl font-medium text-text tracking-tight mb-2">
+    <div className="max-w-2xl mx-auto px-4 sm:px-5 py-8 sm:py-12">
+      <div className="text-center mb-8 sm:mb-10">
+        <h1 className="font-serif text-2xl sm:text-3xl font-medium text-text tracking-tight mb-2">
           Sentence Builder
         </h1>
-        <p className="text-text-secondary text-sm">
+        <p className="text-text-secondary text-xs sm:text-sm px-4 sm:px-0">
           Type or paste English words to generate fill-in-the-blank exercises
         </p>
       </div>
 
-      <div className="mb-7">
-        <p className="text-xs text-text-muted mb-2.5 tracking-wide uppercase">
+      <div className="mb-5 sm:mb-7">
+        <p className="text-[10px] sm:text-xs text-text-muted mb-2 sm:mb-2.5 tracking-wide uppercase">
           Enter at least 20 words
         </p>
         <Input
@@ -95,17 +97,17 @@ export function WordInput() {
           onKeyDown={handleKeyDown}
           placeholder="Type a word and press Enter..."
           disabled={isLoading}
-          className="h-11 rounded-xl border-border bg-surface px-4 text-text placeholder:text-text-muted focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200 text-sm"
+          className="h-10 sm:h-11 rounded-xl border-border bg-surface px-3 sm:px-4 text-text placeholder:text-text-muted focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200 text-sm"
         />
       </div>
 
       {inputWords.length > 0 && (
-        <div className="flex flex-wrap gap-2.5 mb-7 p-5 bg-surface rounded-2xl border border-border-light min-h-[60px] animate-fade-in-up">
+        <div className="flex flex-wrap gap-2 sm:gap-2.5 mb-5 sm:mb-7 p-3 sm:p-5 bg-surface rounded-2xl border border-border-light min-h-[60px] animate-fade-in-up">
           {inputWords.map((word, index) => (
             <span
               key={`${word}-${index}`}
               onClick={() => removeWord(index)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-tag text-text text-sm font-medium rounded-full cursor-pointer transition-all duration-200 hover:bg-tag-hover hover:scale-105 select-none group"
+              className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 bg-tag text-text text-xs sm:text-sm font-medium rounded-full cursor-pointer transition-all duration-200 hover:bg-tag-hover hover:scale-105 select-none group"
             >
               {word}
               <span className="text-text-muted group-hover:text-error transition-colors duration-200 text-xs leading-none">
@@ -117,7 +119,7 @@ export function WordInput() {
       )}
 
       <div className="flex items-center justify-between">
-        <span className="text-sm text-text-secondary">
+        <span className="text-xs sm:text-sm text-text-secondary">
           <span
             className={
               inputWords.length >= 20
@@ -132,21 +134,21 @@ export function WordInput() {
         <Button
           onClick={handleGenerate}
           disabled={!canGenerate}
-          className="min-w-[128px] h-10 rounded-xl bg-primary hover:bg-primary-hover text-surface shadow-none transition-all duration-200 hover:shadow-md disabled:opacity-40 text-sm font-medium"
+          className="min-w-[110px] sm:min-w-[128px] h-9 sm:h-10 rounded-xl bg-primary hover:bg-primary-hover text-surface shadow-none transition-all duration-200 hover:shadow-md disabled:opacity-40 text-xs sm:text-sm font-medium"
         >
           {isLoading ? 'Generating...' : 'Generate Sentences'}
         </Button>
       </div>
 
       {!canGenerate && inputWords.length > 0 && (
-        <p className="text-xs text-text-muted mt-4 pl-1">
+        <p className="text-[10px] sm:text-xs text-text-muted mt-3 sm:mt-4 pl-1">
           Need {20 - inputWords.length} more word{20 - inputWords.length > 1 ? 's' : ''} to generate
         </p>
       )}
 
       {error && (
-        <div className="mt-5 p-4 bg-error-bg border border-error/30 rounded-xl animate-fade-in-up">
-          <p className="text-sm text-error">{error}</p>
+        <div className="mt-4 sm:mt-5 p-3 sm:p-4 bg-error-bg border border-error/30 rounded-xl animate-fade-in-up">
+          <p className="text-xs sm:text-sm text-error">{error}</p>
         </div>
       )}
     </div>
